@@ -191,7 +191,7 @@ def run_tests(a_argv):
     runner = osgunittest.OSGTextTestRunner(verbosity=verb)
     results = runner.run(test_suite, exit_on_fail=core.options.exitonfail)
 
-    if not results.wasSuccessful:
+    if not results.wasSuccessful():
         sys.exit(1)
 
 def wrap_up():
