@@ -1,5 +1,5 @@
 import os
-from datetime import date
+import time
 
 import osgtest.library.core as core
 
@@ -43,7 +43,7 @@ def catalinafile():
     if majorver() <= 6:
         return os.path.join(logdir(), 'catalina.out')
     else:
-        return os.path.join(logdir(), 'catalina.%s.log' % date.strftime(date.today(), '%F'))
+        return os.path.join(logdir(), 'catalina.%s.log' % time.strftime('%F', time.gmtime()))
 
 def pidfile():
     "Path of pid file of a running Tomcat"
