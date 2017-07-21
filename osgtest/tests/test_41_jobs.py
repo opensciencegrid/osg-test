@@ -94,13 +94,3 @@ class TestRunJobs(osgunittest.OSGTestCase):
         blahp_pbs_has_env_vars = (rpm.labelCompare(['blahp', '1.18.11.bosco', '4.osg'], blahp_envra[1:4]) <= 0)
 
         self.run_job_in_tmp_dir(command, 'condor_run a Condor job', verify_environment=blahp_pbs_has_env_vars)
-
-    def test_05_condor_ce_run_condor(self):
-        core.skip_ok_unless_installed('htcondor-ce', 'htcondor-ce-client', 'htcondor-ce-condor', 'condor')
-
-        self.skip_bad_unless(service.is_running('condor-ce'), 'ce not running')
-        self.skip_bad_unless(service.is_running('condor'), 'condor not running')
-        self.skip_bad_unless(core.state['jobs.env-set'], 'job environment not set')
-
-        command = ('condor_ce_run', '-r', '%s:9619' % core.get_hostname(), '/bin/env')
-        self.run_job_in_tmp_dir(command, 'condor_ce_run a Condor job')
