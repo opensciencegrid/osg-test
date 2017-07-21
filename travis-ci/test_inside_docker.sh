@@ -49,4 +49,21 @@ export _condor_CONDOR_CE_TRACE_ATTEMPTS=60
 # Ok, do actual testing
 INSTALL_STR="--install ${PACKAGES//,/ --install }"
 echo "------------ OSG Test --------------"
+set +e # don't exit immediately if osg-test fails
 osg-test -vad --hostcert --no-cleanup ${INSTALL_STR}
+test_exit=$?
+set -e
+
+# Some simple debug files for failures.
+echo "------------ CE Logs --------------"
+cat /var/log/condor-ce/MasterLog
+cat /var/log/condor-ce/CollectorLog
+cat /var/log/condor-ce/SchedLog
+cat /var/log/condor-ce/JobRouterLog
+echo "------------ HTCondor Logs --------------"
+cat /var/log/condor/MasterLog
+cat /var/log/condor/CollectorLog
+cat /var/log/condor/SchedLog
+condor_config_val -dump
+
+exit $test_exit
