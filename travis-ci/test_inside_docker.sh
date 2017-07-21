@@ -13,7 +13,7 @@ yum -y clean expire-cache
 rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-${OS_VERSION}.noarch.rpm
 
 yum -y install yum-plugin-priorities
-rpm -Uvh https://repo.grid.iu.edu/osg/3.3/osg-3.3-el${OS_VERSION}-release-latest.rpm
+rpm -Uvh https://repo.grid.iu.edu/osg/3.4/osg-3.4-el${OS_VERSION}-release-latest.rpm
 yum -y install make git openssl
 
 # Source osg-ca-generator repo version
@@ -49,4 +49,21 @@ export _condor_CONDOR_CE_TRACE_ATTEMPTS=60
 # Ok, do actual testing
 INSTALL_STR="--install ${PACKAGES//,/ --install }"
 echo "------------ OSG Test --------------"
+set +e # don't exit immediately if osg-test fails
 osg-test -vad --hostcert --no-cleanup ${INSTALL_STR}
+test_exit=$?
+set -e
+
+# Some simple debug files for failures.
+echo "------------ CE Logs --------------"
+cat /var/log/condor-ce/MasterLog
+cat /var/log/condor-ce/CollectorLog
+cat /var/log/condor-ce/SchedLog
+cat /var/log/condor-ce/JobRouterLog
+echo "------------ HTCondor Logs --------------"
+cat /var/log/condor/MasterLog
+cat /var/log/condor/CollectorLog
+cat /var/log/condor/SchedLog
+condor_config_val -dump
+
+exit $test_exit
