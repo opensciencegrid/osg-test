@@ -245,6 +245,12 @@ class OSGTestCase(unittest.TestCase):
         finally:
             result.stopTest(self)
 
+    def __str__(self):
+        module = self.__class__.__module__
+        if '.' in module:
+            module = module[module.rfind('.')+1:]  # strip off all but the last component
+        return "%s.py: %s" % (module, self._testMethodName)
+
 
 class OSGTestResult(unittest.TestResult):
     """
