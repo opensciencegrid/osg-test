@@ -6,11 +6,6 @@ import os
 import os.path
 import pwd
 import re
-import rpm
-try:
-    from rpmUtils.miscutils import stringToVersion
-except ImportError:
-    from osgtest.vendor.miscutils import stringToVersion
 import shutil
 import stat
 import subprocess
@@ -20,6 +15,12 @@ import time
 import traceback
 import socket
 import signal
+
+import rpm
+try:
+    from rpmUtils.miscutils import stringToVersion
+except ImportError:
+    from osgtest.vendor.miscutils import stringToVersion
 try:
     from shlex import quote as shell_quote
 except ImportError:
