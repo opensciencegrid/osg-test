@@ -16,6 +16,8 @@ import traceback
 import socket
 import signal
 
+from collections import defaultdict as defaultdict
+
 import rpm
 try:
     from rpmUtils.miscutils import stringToVersion
@@ -41,12 +43,11 @@ config['user.home'] = '/var/home'
 config['system.mapfile'] = '/etc/grid-security/grid-mapfile'
 
 # Global state dictionary.  Other modules may add, read, change, and delete the
-# keys stored herein.  At the moment, no checking is done on its contents, so
-# individual tests should be careful about using it.  The recommendation is to
-# prefix each key with "COMP.", where "COMP" is a short lowercase string that
-# indicates which component the test belongs to, or "general." for truly cross-
-# cutting objects.
-state = {'proxy.valid': False}  # TODO: Drop 'proxy.valid' after we drop support for OSG 3.5
+# keys stored herein. Tests can safely check for keys in this dict, regardless
+# of their existence (default: False).  The recommendation is to prefix each key
+# with "COMP.", where "COMP" is a short lowercase string that indicates which
+# component the test belongs to, or "general." for truly cross- cutting objects.
+state = defaultdict(bool)
 
 class DummyClass(object):
     """A class that ignores all function calls; useful for testing"""
