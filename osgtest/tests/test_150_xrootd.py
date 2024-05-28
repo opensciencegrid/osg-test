@@ -49,7 +49,7 @@ ofs.trace all
 http.trace all
 voms.trace all
 sec.trace all
-scitokens.trace debug
+scitokens.trace all
 """
 
 SCITOKENS_CONF_TEXT = f"""\
