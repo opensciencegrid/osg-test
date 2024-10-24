@@ -15,7 +15,11 @@ class TestInstall(osgunittest.OSGTestCase):
             core.check_system(pre + ('osg-release',), 'Verify osg-release')
         except AssertionError:
             core.check_system(pre + ('osg-release-itb',), 'Verify osg-release + osg-release-itb')
-        core.config['install.original-release-ver'] = core.osg_release().version
+        
+        original_release = core.osg_release().version
+        if '.' not in original_release:  # 23, 24, etc.
+            original_release = f'{original_release}-main'
+        core.config['install.original-release-ver'] = original_release
 
     def test_02_install_packages(self):
         core.state['install.success'] = False
