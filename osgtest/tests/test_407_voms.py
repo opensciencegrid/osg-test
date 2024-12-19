@@ -7,6 +7,9 @@ import osgtest.library.osgunittest as osgunittest
 import osgtest.library.voms as voms
 
 
+# TODO  We do not need most of these tests in OSG 24, except test_06_voms_proxy_direct and its
+#       subsequent checks, because we no longer ship voms ourselves.  We only need a voms proxy
+#       for some xrootd tests, but voms-proxy-fake (voms-proxy-direct) can make those.
 class TestVOMS(osgunittest.OSGTestCase):
 
     def proxy_info(self, msg):
