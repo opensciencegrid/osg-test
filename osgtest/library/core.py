@@ -284,7 +284,7 @@ def trim_output(output):
     if num_output_lines > MAX_OUTPUT_LINES:
         output_lines_trim = (
                 output_lines[:MAX_OUTPUT_LINES//2] +
-                ['(%d lines trimmed)' % (MAX_OUTPUT_LINES - num_output_lines)] +
+                ['(%d lines trimmed)' % (num_output_lines - MAX_OUTPUT_LINES)] +
                 output_lines[-MAX_OUTPUT_LINES//2:]
         )
         output_lines = output_lines_trim
