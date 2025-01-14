@@ -71,6 +71,7 @@ SLURM_PACKAGES = ['slurm',
                   'slurm-perlapi',
                   'slurm-slurmdbd']
 
+MAX_OUTPUT_LINES = 1000  # The maximum number of lines to print for output
 
 # ------------------------------------------------------------------------------
 # Helper Classes
@@ -269,6 +270,25 @@ def monitor_file(filename, old_stat, sentinel, timeout):
     if monitored_file is not None:
         monitored_file.close()
     return (None, None)
+
+
+def trim_output(output):
+    # type: (str|list|None) -> list
+    if output is None:
+        return []
+    elif isinstance(output, str):
+        output_lines = output.splitlines()
+    else:
+        output_lines = output
+    num_output_lines = len(output_lines)
+    if num_output_lines > MAX_OUTPUT_LINES:
+        output_lines_trim = (
+                output_lines[:MAX_OUTPUT_LINES//2] +
+                ['(%d lines trimmed)' % (MAX_OUTPUT_LINES - num_output_lines)] +
+                output_lines[-MAX_OUTPUT_LINES//2:]
+        )
+        output_lines = output_lines_trim
+    return output_lines
 
 
 def system(command, user=None, stdin=None, log_output=True, shell=False, timeout=None, timeout_signal='TERM', quiet=False):
@@ -485,15 +505,17 @@ def diagnose(message, command, status, stdout, stderr):
     else:
         result += 'EXIT STATUS: %d\n' % status
     result += 'STANDARD OUTPUT:'
-    if (stdout is None) or (len(stdout.rstrip('\n')) == 0):
+    stdout_lines = trim_output(stdout)
+    if not stdout_lines:
         result += ' [none]\n'
     else:
-        result += '\n' + stdout.rstrip('\n') + '\n'
+        result += '\n'.join(stdout_lines)
     result += 'STANDARD ERROR:'
-    if (stderr is None) or (len(stderr.rstrip('\n')) == 0):
+    stderr_lines = trim_output(stderr)
+    if not stderr_lines:
         result += ' [none]\n'
     else:
-        result += '\n' + stderr.rstrip('\n') + '\n'
+        result += '\n'.join(stderr_lines)
     return result
 
 
@@ -594,13 +616,15 @@ def __run_command(command, use_test_user, a_input, a_stdout, a_stderr, log_outpu
         _last_log_had_output = False
         if log_output:
             if (stdout is not None) and (len(stdout.rstrip('\n')) > 0):
+                stdout_lines = trim_output(stdout)
                 _log.write('STDOUT:{\n')
-                _log.write(stdout.rstrip('\n') + '\n')
+                _log.write('\n'.join(stdout_lines) + '\n')
                 _log.write('STDOUT:}\n')
                 _last_log_had_output = True
             if (stderr is not None) and (len(stderr.rstrip('\n')) > 0):
+                stderr_lines = trim_output(stderr)
                 _log.write('STDERR:{\n')
-                _log.write(stderr.rstrip('\n') + '\n')
+                _log.write('\n'.join(stderr_lines) + '\n')
                 _log.write('STDERR:}\n')
                 _last_log_had_output = True
         _log.flush()
