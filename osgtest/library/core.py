@@ -509,13 +509,13 @@ def diagnose(message, command, status, stdout, stderr):
     if not stdout_lines:
         result += ' [none]\n'
     else:
-        result += '\n'.join(stdout_lines)
+        result += '\n'.join(stdout_lines) + '\n'
     result += 'STANDARD ERROR:'
     stderr_lines = trim_output(stderr)
     if not stderr_lines:
         result += ' [none]\n'
     else:
-        result += '\n'.join(stderr_lines)
+        result += '\n'.join(stderr_lines) + '\n'
     return result
 
 
