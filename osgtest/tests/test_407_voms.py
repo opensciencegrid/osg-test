@@ -15,8 +15,8 @@ class TestVOMS(osgunittest.OSGTestCase):
     def proxy_info(self, msg):
         self.skip_bad_unless(core.state['voms.got-proxy'], 'no proxy')
 
-        command = ('voms-proxy-info', '-all')
-        stdout = core.check_system(command, 'Run voms-proxy-info', user=True)[0]
+        command = ('voms-proxy-info', '-all', '-dont-verify-ac')
+        stdout = core.check_system(command, 'Run voms-proxy-info -all -dont-verify-ac', user=True)[0]
         self.assert_(('/%s/Role=NULL' % (core.config['voms.vo'])) in stdout, msg)
 
     def test_00_setup(self):
