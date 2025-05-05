@@ -38,11 +38,14 @@ class TestStashCache(OSGTestCase):
                                 expected=contents,
                                 message="cached file %s mismatch" % name)
 
+    @core.osgrelease(23)
     def setUp(self):
         core.skip_ok_unless_installed("stash-origin",
                                       "stash-cache",
                                       "stashcp",
                                       by_dependency=True)
+        if core.rpm_is_installed("pelican"):
+            self.skip_ok("pelican is installed, skipping stashcache tests")
         self.skip_bad_unless_running("xrootd@stash-origin", "xrootd@stash-cache", "xrootd@stash-origin-auth",
                                      "xrootd@stash-cache-auth")
 
