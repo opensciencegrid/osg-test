@@ -1,6 +1,7 @@
 import os
 import osgtest.library.core as core
-from cagen import CA
+from cagen import CA, certificate_info
+import osgtest.library.files as files
 import osgtest.library.osgunittest as osgunittest
 from osgtest.library.voms import VONAME
 
@@ -28,3 +29,31 @@ class TestCert(osgunittest.OSGTestCase):
             test_ca.voms(VONAME)
             core.state['certs.hostcert_created'] = True
 
+    def test_03_generate_user_cert(self):
+        core.state['general.user_cert_created'] = False
+        core.state['system.wrote_mapfile'] = False
+
+        if core.options.skiptests:
+            core.skip('no user needed')
+            return
+
+        self.skip_bad_unless(core.state['user.verified'], "User doesn't exist, has HOME=/, or is missing HOME")
+
+        # Set up certificate
+        globus_dir = os.path.join(core.state['user.pwd'].pw_dir, '.globus')
+        core.state['user.cert_path'] = os.path.join(globus_dir, 'usercert.pem')
+        core.state['user.key_path'] = os.path.join(globus_dir, 'userkey.pem')
+        test_ca = CA.load(core.config['certs.test-ca'])
+        if not os.path.exists(core.state['user.cert_path']):
+            test_ca.usercert(core.options.username, core.options.password)
+            core.state['general.user_cert_created'] = True
+
+        (core.config['user.cert_subject'],
+         core.config['user.cert_issuer']) = certificate_info(core.state['user.cert_path'])
+
+        # Add user to mapfile
+        files.append(core.config['system.mapfile'], '"%s" %s\n' %
+                     (core.config['user.cert_subject'], core.state['user.pwd'].pw_name),
+                     owner='user')
+        core.state['system.wrote_mapfile'] = True
+        os.chmod(core.config['system.mapfile'], 0o644)
