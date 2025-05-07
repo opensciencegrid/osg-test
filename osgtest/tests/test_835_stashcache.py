@@ -25,11 +25,14 @@ def stop_xrootd(instance):
 
 
 class TestStopStashCache(OSGTestCase):
+    @core.osgrelease(23)
     def setUp(self):
         core.skip_ok_unless_installed("stash-origin",
                                       "stash-cache",
                                       "stashcp",
                                       by_dependency=True)
+        if core.rpm_is_installed("pelican"):
+            self.skip_ok("pelican is installed, skipping stashcache tests")
 
     def test_01_stop_stash_origin(self):
         stop_xrootd("stash-origin")

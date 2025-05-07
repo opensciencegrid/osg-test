@@ -145,11 +145,14 @@ def start_xrootd(instance):
 
 
 class TestStartStashCache(OSGTestCase):
+    @core.osgrelease(23)
     def setUp(self):
         core.skip_ok_unless_installed("stash-origin",
                                       "stash-cache",
                                       "stashcp",
                                       by_dependency=True)
+        if core.rpm_is_installed("pelican"):
+            self.skip_ok("pelican is installed, skipping stashcache tests")
 
     def test_01_configure(self):
         caching_plugin_cfg_path = "/etc/xrootd/config.d/40-stash-cache-plugin.cfg"
