@@ -2,6 +2,7 @@ import os
 import osgtest.library.core as core
 from cagen import CA
 import osgtest.library.osgunittest as osgunittest
+from osgtest.library.voms import VONAME
 
 class TestCert(osgunittest.OSGTestCase):
 
@@ -24,5 +25,6 @@ class TestCert(osgunittest.OSGTestCase):
         if core.options.hostcert and not os.path.exists(core.config['certs.hostcert']):
             test_ca = CA.load(core.config['certs.test-ca'])
             test_ca.hostcert()
+            test_ca.voms(VONAME)
             core.state['certs.hostcert_created'] = True
 

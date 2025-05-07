@@ -178,8 +178,7 @@ def discover_tests():
     test_files = ['osgtest.tests.' + test for test in test_sequence_lines if test and not test.startswith('#')]
     test_sequence.close()
     # prepend tests that are always safe
-    args = ['osgtest.tests.special_certs',
-            'osgtest.tests.special_user',
+    args = ['osgtest.tests.special_user',
             'osgtest.tests.special_selinux']
     if len(core.options.packages) > 0:
         args.append('osgtest.tests.special_install')
