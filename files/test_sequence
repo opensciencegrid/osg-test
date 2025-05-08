@@ -3,6 +3,7 @@ test_050_mysqld
 test_055_osg_ca_manage
 test_060_fetch_crl
 test_070_munge
+test_080_certs
 test_090_jobs
 test_100_condor
 test_150_xrootd
