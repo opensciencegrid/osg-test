@@ -43,10 +43,10 @@ class TestStartHTVault(osgunittest.OSGTestCase):
 
         # Pre-configure HTVault: Create Yaml config files for vault's (dummy) identity provider
         core.config['vault.issuer-config'] = join(core.config['vault.config-dir'], '20-cilogon.yaml')
-        files.write(core.config['vault.issuer-config'], HTVAULT_ISSUER_CONFIG, owner='vault', chmod=0o644)
+        files.write(core.config['vault.issuer-config'], HTVAULT_ISSUER_CONFIG, owner='vault', chmod=0o644, backup=False)
 
         core.config['vault.secrets-config'] = join(core.config['vault.config-dir'], '80-secrets.yaml')
-        files.write(core.config['vault.secrets-config'], HTVAULT_SECRET_CONFIG, owner='vault', chmod=0o644)
+        files.write(core.config['vault.secrets-config'], HTVAULT_SECRET_CONFIG, owner='vault', chmod=0o644, backup=False)
 
 
         # TODO are there existing libraries within the test framework to support this? Cagen doesn't seem
