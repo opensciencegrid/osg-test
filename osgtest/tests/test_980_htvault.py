@@ -64,7 +64,7 @@ class TestStartHTVault(osgunittest.OSGTestCase):
             '-sha256',
             '-days', '365',
             '-nodes',
-            '-subj', '/C=US/ST=WI/L=Madison/O=UW/OU=CHTC/CN=CommonNameOrHostname'))
+            '-subj', '/C=US/ST=WI/L=Madison/O=UW/OU=CHTC/CN=TestVault'))
 
         service.check_start('vault')
         # htvault-config depends on vault and should be started automatically
