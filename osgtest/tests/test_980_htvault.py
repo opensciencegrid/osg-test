@@ -1,4 +1,3 @@
-import re
 from os.path import join
 
 import osgtest.library.core as core
@@ -33,7 +32,7 @@ class TestStartHTVault(osgunittest.OSGTestCase):
         core.state['vault.started-service'] = False
         core.state['vault.running-service'] = False
 
-        core.skip_ok_unless_installed('htvault', 'htgettoken')
+        core.skip_ok_unless_installed('htvault-config', 'htgettoken')
 
         core.config['vault.config-dir'] = '/etc/htvault-config/config.d/'
 
@@ -65,6 +64,10 @@ class TestStartHTVault(osgunittest.OSGTestCase):
             '-days', '365',
             '-nodes',
             '-subj', '/C=US/ST=WI/L=Madison/O=UW/OU=CHTC/CN=TestVault'))
+        # Need to set ownership of certs
+        core.system((
+            'chown', 'vault', '/etc/htvault-config/hostkey.pem', '/etc/htvault-config/hostcert.pem'
+        ))
 
         service.check_start('vault')
         # htvault-config depends on vault and should be started automatically
