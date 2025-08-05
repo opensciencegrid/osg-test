@@ -36,4 +36,4 @@ test_910_pbs
 test_940_munge
 test_950_mysqld
 test_970_java
-test_980_htvault
+test_295_htvault

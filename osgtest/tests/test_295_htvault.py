@@ -29,6 +29,9 @@ issuers:
 class TestStartHTVault(osgunittest.OSGTestCase):
 
     def test_01_start_htvault(self):
+        """ Basic test that confirms the vault and htvault-config systemd services
+        can be configured and started
+        """
         core.state['vault.started-service'] = False
         core.state['vault.running-service'] = False
 
@@ -53,20 +56,23 @@ class TestStartHTVault(osgunittest.OSGTestCase):
         # to support exactly this
 
         # Create a cert/key pair for vault
+        core.config['vault.hostkey'] = '/etc/htvault-config/hostkey.pem'
+        core.config['vault.hostcert'] = '/etc/htvault-config/hostcert.pem'
         core.system((
             'openssl', 
             'req', 
             '-x509', 
             '-newkey', 'rsa:4096', 
-            '-keyout', '/etc/htvault-config/hostkey.pem', 
-            '-out', '/etc/htvault-config/hostcert.pem',
+            '-keyout', core.config['vault.hostkey'], 
+            '-out', core.config['vault.hostcert'],
             '-sha256',
             '-days', '365',
             '-nodes',
             '-subj', '/C=US/ST=WI/L=Madison/O=UW/OU=CHTC/CN=TestVault'))
+
         # Need to set ownership of certs
         core.system((
-            'chown', 'vault', '/etc/htvault-config/hostkey.pem', '/etc/htvault-config/hostcert.pem'
+            'chown', 'vault', core.config['vault.hostkey'], core.config['vault.hostcert'] 
         ))
 
         service.check_start('vault')
@@ -75,4 +81,29 @@ class TestStartHTVault(osgunittest.OSGTestCase):
 
         core.state['vault.started-service'] = True
         core.state['vault.running-service'] = True
+
+
+    def test_02_stop_htvault(self):
+        """ Shut down the vault instance set up in the previous step and
+        clean up config files 
+        """
+
+        # Check that the vault (and htvault) services were started successfully
+        if not (service.is_running('vault') and service.is_running('htvault-config')):
+            core.state['vault.running-service'] = False
+            return
+
+        # Attempt to stop the vault and htvault-config services
+        service.check_stop('htvault-config')
+        service.check_stop('vault')
+
+        core.state['vault.running-service'] = False
+
+
+        # Clean up the files created for the htvault-config test
+        files.remove(core.config['vault.issuer-config'])
+        files.remove(core.config['vault.secrets-config'])
+        files.remove(core.config['vault.hostcert'])
+        files.remove(core.config['vault.hostkey'])
+        
 
