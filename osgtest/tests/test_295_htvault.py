@@ -52,8 +52,10 @@ class TestStartHTVault(osgunittest.OSGTestCase):
         files.write(core.config['vault.secrets-config'], HTVAULT_SECRET_CONFIG, owner='vault', chmod=0o644, backup=False)
 
 
-        # TODO are there existing libraries within the test framework to support this? Cagen doesn't seem
-        # to support exactly this
+
+        # HTVault requires a dedicated cert/key pair in its own config directory. It's not
+        # currently possible to configure cagen to output outside of /etc/grid-security
+        # so manually run the openssl commands here.
 
         # Create a cert/key pair for vault
         core.config['vault.hostkey'] = '/etc/htvault-config/hostkey.pem'
@@ -70,7 +72,7 @@ class TestStartHTVault(osgunittest.OSGTestCase):
             '-nodes',
             '-subj', '/C=US/ST=WI/L=Madison/O=UW/OU=CHTC/CN=TestVault'))
 
-        # Need to set ownership of certs
+        # Set ownership of certs
         core.system((
             'chown', 'vault', core.config['vault.hostkey'], core.config['vault.hostcert'] 
         ))
@@ -81,29 +83,3 @@ class TestStartHTVault(osgunittest.OSGTestCase):
 
         core.state['vault.started-service'] = True
         core.state['vault.running-service'] = True
-
-
-    def test_02_stop_htvault(self):
-        """ Shut down the vault instance set up in the previous step and
-        clean up config files 
-        """
-
-        # Check that the vault (and htvault) services were started successfully
-        if not (service.is_running('vault') and service.is_running('htvault-config')):
-            core.state['vault.running-service'] = False
-            return
-
-        # Attempt to stop the vault and htvault-config services
-        service.check_stop('htvault-config')
-        service.check_stop('vault')
-
-        core.state['vault.running-service'] = False
-
-
-        # Clean up the files created for the htvault-config test
-        files.remove(core.config['vault.issuer-config'])
-        files.remove(core.config['vault.secrets-config'])
-        files.remove(core.config['vault.hostcert'])
-        files.remove(core.config['vault.hostkey'])
-        
-
