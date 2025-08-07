@@ -1,4 +1,5 @@
-from os.path import join
+from os.path import join, exists
+import shutil
 
 import osgtest.library.core as core
 import osgtest.library.files as files
@@ -53,29 +54,23 @@ class TestStartHTVault(osgunittest.OSGTestCase):
 
 
 
-        # HTVault requires a dedicated cert/key pair in its own config directory. It's not
-        # currently possible to configure cagen to output outside of /etc/grid-security
-        # so manually run the openssl commands here.
+        # HTVault requires a dedicated cert/key pair in its own config directory.  
+        # The default test certs live in /etc/grid-security, so copy them and
+        # change their permissions
 
-        # Create a cert/key pair for vault
         core.config['vault.hostkey'] = '/etc/htvault-config/hostkey.pem'
         core.config['vault.hostcert'] = '/etc/htvault-config/hostcert.pem'
-        core.system((
-            'openssl', 
-            'req', 
-            '-x509', 
-            '-newkey', 'rsa:4096', 
-            '-keyout', core.config['vault.hostkey'], 
-            '-out', core.config['vault.hostcert'],
-            '-sha256',
-            '-days', '365',
-            '-nodes',
-            '-subj', '/C=US/ST=WI/L=Madison/O=UW/OU=CHTC/CN=TestVault'))
+
+        # Confirm that the cert/key were created in a previous test (test_080_certs)
+        self.assertTrue(exists(core.config['certs.hostcert']), 'HTVault Test requires hostcert/key')
+
+        # Copy the cert/key pair to vault's config
+        shutil.copy(core.config['certs.hostcert'], core.config['vault.hostcert'])
+        shutil.copy(core.config['certs.hostkey'], core.config['vault.hostkey'])
 
         # Set ownership of certs
-        core.system((
-            'chown', 'vault', core.config['vault.hostkey'], core.config['vault.hostcert'] 
-        ))
+        shutil.chown(core.config['vault.hostcert'], 'vault')
+        shutil.chown(core.config['vault.hostkey'], 'vault')
 
         service.check_start('vault')
         # htvault-config depends on vault and should be started automatically
