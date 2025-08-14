@@ -1,6 +1,7 @@
 from os.path import join, exists
 import shutil
 
+import pwd
 import osgtest.library.core as core
 import osgtest.library.files as files
 import osgtest.library.condor as condor
@@ -40,6 +41,15 @@ class TestStartHTVault(osgunittest.OSGTestCase):
 
         core.config['vault.config-dir'] = '/etc/htvault-config/config.d/'
 
+        # Daemon user changed from vault to openbao in htvault-config 2.1.0, accomodate both        
+        daemon_user = 'vault'
+        try:
+            # Sample command that will fail if the daemon user doesn't exist
+            pwd.getpwnam(daemon_user)
+        except KeyError:
+            daemon_user = 'openbao'
+
+
         # Check that the vault (and htvault) services aren't already running
         if service.is_running('vault'):
             core.state['vault.running-service'] = True
@@ -47,10 +57,10 @@ class TestStartHTVault(osgunittest.OSGTestCase):
 
         # Pre-configure HTVault: Create Yaml config files for vault's (dummy) identity provider
         core.config['vault.issuer-config'] = join(core.config['vault.config-dir'], '20-cilogon.yaml')
-        files.write(core.config['vault.issuer-config'], HTVAULT_ISSUER_CONFIG, owner='vault', chmod=0o644, backup=False)
+        files.write(core.config['vault.issuer-config'], HTVAULT_ISSUER_CONFIG, owner=daemon_user, chmod=0o644, backup=False)
 
         core.config['vault.secrets-config'] = join(core.config['vault.config-dir'], '80-secrets.yaml')
-        files.write(core.config['vault.secrets-config'], HTVAULT_SECRET_CONFIG, owner='vault', chmod=0o644, backup=False)
+        files.write(core.config['vault.secrets-config'], HTVAULT_SECRET_CONFIG, owner=daemon_user, chmod=0o644, backup=False)
 
 
 
@@ -69,8 +79,8 @@ class TestStartHTVault(osgunittest.OSGTestCase):
         shutil.copy(core.config['certs.hostkey'], core.config['vault.hostkey'])
 
         # Set ownership of certs
-        shutil.chown(core.config['vault.hostcert'], 'vault')
-        shutil.chown(core.config['vault.hostkey'], 'vault')
+        shutil.chown(core.config['vault.hostcert'], daemon_user)
+        shutil.chown(core.config['vault.hostkey'], daemon_user)
 
         service.check_start('vault')
         # htvault-config depends on vault and should be started automatically
