@@ -42,12 +42,12 @@ class TestStartHTVault(osgunittest.OSGTestCase):
         core.config['vault.config-dir'] = '/etc/htvault-config/config.d/'
 
         # Daemon user changed from vault to openbao in htvault-config 2.1.0, accomodate both        
-        daemon_user = 'vault'
+        daemon_user = 'openbao'
         try:
             # Sample command that will fail if the daemon user doesn't exist
             pwd.getpwnam(daemon_user)
         except KeyError:
-            daemon_user = 'openbao'
+            daemon_user = 'vault'
 
 
         # Check that the vault (and htvault) services aren't already running
