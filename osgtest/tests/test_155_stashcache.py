@@ -181,9 +181,9 @@ class TestStartStashCache(OSGTestCase):
 
         # Delete the lines we can't override
         for path, regexp in [
-            (XROOTD_ORIGIN_CFG_PATH, "^\s*all.manager.+$"),
-            (http_cfg_path, "^\s*xrd.protocol.+$"),
-            (caching_plugin_cfg_path, "^\s*(ofs.osslib|pss.cachelib|pss.origin).+$"),
+            (XROOTD_ORIGIN_CFG_PATH, r"^\s*all.manager.+$"),
+            (http_cfg_path, r"^\s*xrd.protocol.+$"),
+            (caching_plugin_cfg_path, r"^\s*(ofs.osslib|pss.cachelib|pss.origin).+$"),
         ]:
             files.replace_regexpr(path, regexp, "", owner=NAMESPACE)
             filelist.append(path)

@@ -227,4 +227,4 @@ class TestCleanup(osgunittest.OSGTestCase):
                 actual_is_clear = False
             shutil.rmtree(files._backup_directory, ignore_errors=True)
 
-        self.assert_(record_is_clear and actual_is_clear, 'Backups were not restored fully')
+        self.assertTrue(record_is_clear and actual_is_clear, 'Backups were not restored fully')

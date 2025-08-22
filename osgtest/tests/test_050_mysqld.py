@@ -19,7 +19,7 @@ class TestStartMySQL(osgunittest.OSGTestCase):
 
         command = ('mysql', '-sNe', "SHOW VARIABLES where Variable_name='datadir';")
         mysql_cfg = core.check_system(command, 'dump mysql config')[0]
-        core.config['mysql.datadir'] = re.match('datadir\s*(.+?)\/\s*$', mysql_cfg).group(1)
+        core.config['mysql.datadir'] = re.match(r'datadir\s*(.+?)/\s*$', mysql_cfg).group(1)
         self.assert_(core.config['mysql.datadir'] is not None, 'could not extract MySQL datadir')
 
         # Backup the old mysql folder

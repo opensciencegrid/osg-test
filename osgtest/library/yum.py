@@ -78,7 +78,7 @@ def get_transaction_id():
     """Grab the latest transaction ID from yum"""
     command = ('yum', 'history', 'info')
     history_out = core.check_system(command, 'Get yum Transaction ID')[0]
-    m = re.search('Transaction ID : (\d+)', history_out)
+    m = re.search(r'Transaction ID : (\d+)', history_out)
     return int(m.group(1))
 
 def parse_output_for_packages(yum_output):
