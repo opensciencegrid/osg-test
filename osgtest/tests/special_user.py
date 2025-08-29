@@ -77,9 +77,9 @@ class TestUser(osgunittest.OSGTestCase):
             except KeyError:
                 self.fail("User '%s' should exist but does not" % core.options.username)
 
-        self.assert_(user.pw_dir != '/', "User '%s' has home directory at '/'" % (core.options.username))
-        self.assert_(os.path.isdir(user.pw_dir),
-                     "User '%s' missing a home directory at '%s'" % (core.options.username, user.pw_dir))
+        self.assertTrue(user.pw_dir != '/', "User '%s' has home directory at '/'" % (core.options.username))
+        self.assertTrue(os.path.isdir(user.pw_dir),
+                       "User '%s' missing a home directory at '%s'" % (core.options.username, user.pw_dir))
 
         core.state['user.uid'] = user.pw_uid
         core.state['user.gid'] = user.pw_gid

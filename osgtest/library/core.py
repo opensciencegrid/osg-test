@@ -376,7 +376,7 @@ def installed_rpms():
     """Returns the list of all installed packages."""
     command = ('rpm', '--query', '--all', '--queryformat', r'%{NAME}\n')
     status, stdout, stderr = system(command, log_output=False, quiet=True)
-    return set(re.split('\s+', stdout.strip()))
+    return set(re.split(r'\s+', stdout.strip()))
 
 def rpm_regexp_is_installed(a_regexp):
     """Returns whether any RPM matches the provided regexp."""
@@ -721,7 +721,7 @@ def parse_env_output(output):
     """
     env = {}
     for line in output.split('\n'):
-        env_match = re.match('(\S+)=(\S+)', line)
+        env_match = re.match(r'(\S+)=(\S+)', line)
         try:
             env[env_match.group(1)] = env_match.group(2)
         except AttributeError:
