@@ -128,7 +128,7 @@ class TestStashCache(OSGTestCase):
                                          "Checking xrootd copy from authenticated origin", user=True)
         origin_file = os.path.join(getcfg("OriginRootdir"), getcfg("OriginAuthExport").lstrip("/"), name)
         checksum_match = files.checksum_files_match(origin_file, dest_file)
-        self.assert_(checksum_match, 'Origin and directly downloaded file have the same contents')
+        self.assertTrue(checksum_match, 'Origin and directly downloaded file have the same contents')
 
     def test_07_xrootd_fetch_from_auth_cache(self):
         # TODO This should work with voms certs too
@@ -144,7 +144,7 @@ class TestStashCache(OSGTestCase):
                                dest_file], "Checking xrootd copy from Authenticated cache", user=True)
         origin_file = os.path.join(getcfg("OriginRootdir"), getcfg("OriginAuthExport").lstrip("/"), name)
         checksum_match = files.checksum_files_match(origin_file, dest_file)
-        self.assert_(checksum_match, 'Origin and file downloaded via cache have the same contents')
+        self.assertTrue(checksum_match, 'Origin and file downloaded via cache have the same contents')
 
     def test_08_https_fetch_from_auth_cache(self):
         # TODO This should work with voms certs too
@@ -166,4 +166,4 @@ class TestStashCache(OSGTestCase):
                               "Checking xrootd copy from Authenticated cache", user=True)
         origin_file = os.path.join(getcfg("OriginRootdir"), getcfg("OriginAuthExport").lstrip("/"), name)
         checksum_match = files.checksum_files_match(origin_file, dest_file)
-        self.assert_(checksum_match, 'Origin and file downloaded via cache have the same contents')
+        self.assertTrue(checksum_match, 'Origin and file downloaded via cache have the same contents')

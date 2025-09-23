@@ -14,5 +14,5 @@ class TestStartMunge(osgunittest.OSGTestCase):
         files.preserve(core.config['munge.keyfile'], 'munge')
         command = ('/usr/sbin/create-munge-key', '-f',)
         stdout, _, fail = core.check_system(command, 'Create munge key')
-        self.assert_(stdout.find('error') == -1, fail)
+        self.assertTrue(stdout.find('error') == -1, fail)
         service.check_start('munge')

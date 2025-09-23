@@ -18,7 +18,7 @@ class TestStopCvmfs(osgunittest.OSGTestCase):
             pass  # tempdir was never created
 
         stdout, _, fail = core.check_system(('cvmfs_config', 'umount'), 'Stop Cvmfs server')
-        self.assert_(stdout.find('FAILED') == -1, fail)
+        self.assertTrue(stdout.find('FAILED') == -1, fail)
 
         files.restore("/etc/fuse.conf", "cvmfs")
         files.restore("/etc/auto.master", "cvmfs")
