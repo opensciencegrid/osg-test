@@ -17,7 +17,7 @@ class TestVOMS(osgunittest.OSGTestCase):
 
         command = ('voms-proxy-info', '-all')
         stdout = core.check_system(command, 'Run voms-proxy-info', user=True)[0]
-        self.assert_(('/%s/Role=NULL' % (core.config['voms.vo'])) in stdout, msg)
+        self.assertTrue(('/%s/Role=NULL' % (core.config['voms.vo'])) in stdout, msg)
 
     def test_00_setup(self):
         core.state.setdefault('proxy.valid', False)
@@ -56,7 +56,7 @@ class TestVOMS(osgunittest.OSGTestCase):
         password = core.options.password + '\n'
         status, stdout, _ = core.system(command, True, password)
         self.assertNotEqual(status, 0, 'voms-proxy-init fails on bad group')
-        self.assert_('Unable to satisfy' in stdout, 'voms-proxy-init failure message')
+        self.assertTrue('Unable to satisfy' in stdout, 'voms-proxy-init failure message')
 
     # Copy of 03 above, to make sure failure did not affect good proxy
     def test_05_voms_proxy_info(self):

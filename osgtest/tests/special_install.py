@@ -74,7 +74,7 @@ class TestInstall(osgunittest.OSGTestCase):
         core.check_system(command, 'Erase osg-release')
 
         update_release = core.options.updaterelease
-        self.assert_(re.match(r'\d+[.]?\d+$', update_release), "Unrecognized updaterelease format")
+        self.assertTrue(re.match(r'\d+[.]?\d+$', update_release), "Unrecognized updaterelease format")
 
         # Example URLs
         # https://repo.opensciencegrid.org/osg/3.6/osg-3.6-el7-release-latest.rpm
@@ -127,4 +127,3 @@ def verify_dependency(dep):
 
     command = ('rpm', '--verify', pkg)
     core.check_system(command, 'Verify %s' % pkg)
-

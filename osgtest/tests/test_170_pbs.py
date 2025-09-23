@@ -75,7 +75,7 @@ set server acl_host_enable = True
             command = ('/usr/sbin/pbs_server -d /var/lib/torque -t create -f && '
                        'sleep 10 && /usr/bin/qterm')
             stdout, _, fail = core.check_system(command, 'create initial pbs serverdb config', shell=True)
-            self.assert_(stdout.find('error') == -1, fail)
+            self.assertTrue(stdout.find('error') == -1, fail)
 
         # This gets wiped if we write it before the initial 'service pbs_server create'
         # However, this file needs to be in place before the service is started so we
@@ -111,10 +111,9 @@ set server acl_host_enable = True
         while (time.time() - start_time) < 600:
             command = ('/usr/bin/qnodes', '-s', core.get_hostname())
             stdout, _, fail = core.check_system(command, 'Get pbs node info')
-            self.assert_(stdout.find('error') == -1, fail)
+            self.assertTrue(stdout.find('error') == -1, fail)
             if stdout.find('state = free'):
                 core.state['torque.nodes-up'] = True
                 break
         if not core.state['torque.nodes-up']:
             self.fail('PBS nodes not coming up')
-

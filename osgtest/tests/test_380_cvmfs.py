@@ -77,7 +77,7 @@ class TestCvmfs(osgunittest.OSGTestCase):
         command = ('ls', '/cvmfs')
         status, stdout, stderr = core.system(command, False)
         file_exists = os.path.exists('/cvmfs')
-        self.assert_(file_exists, 'Cvmfs mount point missing')
+        self.assertTrue(file_exists, 'Cvmfs mount point missing')
         core.state['cvmfs.mounted'] = True
 
         cern_repo = 'cms.cern.ch'
@@ -90,7 +90,7 @@ class TestCvmfs(osgunittest.OSGTestCase):
 
         command = ('ls', self.__check_path)
         status, stdout, stderr = core.system(command, False)
-        self.assert_(file_exists, 'Test cvmfs file missing')
+        self.assertTrue(file_exists, 'Test cvmfs file missing')
 
         command = ('bash', '-c', 'source ' + self.__check_path)
         status, stdout, stderr = core.system(command, False)

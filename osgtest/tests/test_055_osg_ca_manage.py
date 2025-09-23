@@ -16,7 +16,7 @@ class TestOsgCaManage(osgunittest.OSGTestCase):
 
         self.assertEquals(status, 0, fail)
         pem_count = len(glob.glob('/etc/grid-security/certificates/*.pem'))
-        self.assert_(pem_count > 0, "No certificates installed")
+        self.assertTrue(pem_count > 0, "No certificates installed")
 
     def test_02_verify_ca(self):
         """Verify CA installation via `osg-ca-manage verify`"""

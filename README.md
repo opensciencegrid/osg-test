@@ -209,7 +209,7 @@ Within each test function, use the [TestCase object functions](http://docs.pytho
 ```python
 def test_99_example(self):
      result = do_something()
-     self.assert_(result > 42, 'result too low')
+     self.assertTrue(result > 42, 'result too low')
      self.assertEqual(result, 57, 'result ok')
 ```
 
@@ -343,7 +343,7 @@ def test_01_web100clt(self):
     command = ('web100clt', '-v')
     stdout, stderr, fail = core.check_system(command, 'NDT client')
     result = re.search('ndt.+version', stdout, re.IGNORECASE)
-    self.assert_(result is not None)
+    self.assertTrue(result is not None)
 ```
 
 ### Configuration and State

@@ -114,7 +114,7 @@ class TestXrootd(osgunittest.OSGTestCase):
         command = ('xrdcp', '--debug', '2', TestXrootd.__data_path, xroot_url(TestXrootd.user_copied_file_gsi))
         with core.no_bearer_token(core.options.username):
             core.check_system(command, "xrdcp upload to user dir with GSI auth", user=True)
-        self.assert_(os.path.exists(TestXrootd.user_copied_file_gsi), "Uploaded file missing")
+        self.assertTrue(os.path.exists(TestXrootd.user_copied_file_gsi), "Uploaded file missing")
 
     @xrootd_record_failure
     def test_03b_xrdcp_upload_scitoken_authenticated(self):
@@ -139,7 +139,7 @@ class TestXrootd(osgunittest.OSGTestCase):
                 core.check_system(command, message, exit=expected_exit, user=True)
 
             # TODO: Test token discovery at $X509_RUNTIME_DIR/bt_u$UID and /tmp/bt_u$UID
-        self.assert_(os.path.exists(TestXrootd.user_copied_file_scitoken), "Uploaded file missing")
+        self.assertTrue(os.path.exists(TestXrootd.user_copied_file_scitoken), "Uploaded file missing")
 
     @xrootd_record_failure
     def test_03c_xrdcp_upload_voms_authenticated(self):
@@ -148,7 +148,7 @@ class TestXrootd(osgunittest.OSGTestCase):
         command = ('xrdcp', '--force', '--debug', '2', TestXrootd.__data_path, xrootd_url)
         with core.no_bearer_token(core.options.username):
             core.check_system(command, "xrdcp upload to vo dir with VOMS auth", user=True)
-        self.assert_(os.path.exists(TestXrootd.vo_copied_file), "Uploaded file missing")
+        self.assertTrue(os.path.exists(TestXrootd.vo_copied_file), "Uploaded file missing")
 
     @xrootd_record_failure
     def test_04a_xrdcp_upload_gsi_authenticated_denied(self):
@@ -205,7 +205,7 @@ class TestXrootd(osgunittest.OSGTestCase):
         files.remove(TestXrootd.download_temp)
         try:
             core.check_system(command, message ,user=True)
-            self.assert_(os.path.isfile(TestXrootd.download_temp), "Downloaded file missing")
+            self.assertTrue(os.path.isfile(TestXrootd.download_temp), "Downloaded file missing")
             self.assertEqualVerbose(files.read(TestXrootd.download_temp, as_single_string=True),
                                     files.read(remote_file, as_single_string=True),
                                     "Downloaded contents differ from expected")
