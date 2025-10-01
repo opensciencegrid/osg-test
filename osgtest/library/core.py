@@ -665,14 +665,10 @@ def osg_release_rpm() -> Optional[str]:
     Return the name of the RPM providing osg-release, or None if no such
     RPM is found.
     """
-    proc = subprocess.run(
-        ['rpm', '-q', '--whatprovides', 'osg-release'],
-        stdout=subprocess.PIPE,
-        encoding='latin-1',
-    )
-    if proc.returncode != 0:
+    try:
+        return dependency_installed_rpms('osg-release')[0]
+    except IndexError:
         return None
-    return proc.stdout.strip()
 
 
 @functools.lru_cache(1)
