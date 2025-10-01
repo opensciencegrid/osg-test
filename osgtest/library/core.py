@@ -1,6 +1,4 @@
 """Support and convenience functions for tests."""
-from __future__ import print_function
-
 import contextlib
 import errno
 import os
@@ -8,10 +6,7 @@ import os.path
 import pwd
 import re
 import rpm
-try:
-    from rpmUtils.miscutils import stringToVersion
-except ImportError:
-    from osgtest.vendor.miscutils import stringToVersion
+from osgtest.vendor.miscutils import stringToVersion
 import shutil
 import stat
 import subprocess
@@ -21,10 +16,8 @@ import time
 import traceback
 import socket
 import signal
-try:
-    from shlex import quote as shell_quote
-except ImportError:
-    from pipes import quote as shell_quote
+from shlex import quote as shell_quote
+from typing import Any, Dict, List, Union
 
 from osgtest.library import osgunittest
 
@@ -36,7 +29,7 @@ from osgtest.library import osgunittest
 # for the test run.  Someday, we may even load this configuration from a file,
 # or something like that.  For now, test modules should only add new entries to
 # this dictionary, neither modifying nor deleting existing ones.
-config = {}
+config: Dict[str, Any] = {}
 config['user.home'] = '/var/home'
 config['system.mapfile'] = '/etc/grid-security/grid-mapfile'
 
@@ -46,7 +39,7 @@ config['system.mapfile'] = '/etc/grid-security/grid-mapfile'
 # prefix each key with "COMP.", where "COMP" is a short lowercase string that
 # indicates which component the test belongs to, or "general." for truly cross-
 # cutting objects.
-state = {'proxy.valid': False}
+state: Dict[str, Any] = {'proxy.valid': False}
 
 class DummyClass(object):
     """A class that ignores all function calls; useful for testing"""
@@ -57,13 +50,13 @@ class DummyClass(object):
 
 # Global command-line options.  This should be merged into the config object,
 # eventually.
-options = None
+options: Any = None
 
 # "Internal" attributes for use within this module.
-_log = None
-_log_filename = None
+_log = sys.stderr
+_log_filename = ""
 _last_log_had_output = True
-_el_release = None
+_el_release = ""
 
 SLURM_PACKAGES = ['slurm',
                   'slurm-slurmd',
@@ -273,7 +266,7 @@ def monitor_file(filename, old_stat, sentinel, timeout):
 
 
 def trim_output(output):
-    # type: (str|list|None) -> list
+    # type: (Union[str, List, None]) -> List
     if output is None:
         return []
     elif isinstance(output, str):
