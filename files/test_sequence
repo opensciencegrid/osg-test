@@ -6,7 +6,6 @@ test_080_certs
 test_090_jobs
 test_100_condor
 test_150_xrootd
-test_155_stashcache
 test_158_xrootd_tpc
 test_170_pbs
 test_180_cvmfs
@@ -19,7 +18,6 @@ test_401_scitokens
 test_407_voms
 test_410_jobs
 test_450_xrootd
-test_460_stashcache
 test_465_xrootd_tpc
 test_490_jobs
 test_550_condorce
@@ -28,7 +26,6 @@ test_740_slurm
 test_780_voms
 test_790_condorce
 test_820_cvmfs
-test_835_stashcache
 test_838_xrootd_tpc
 test_840_xrootd
 test_890_condor
