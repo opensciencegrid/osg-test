@@ -653,7 +653,7 @@ def el_release() -> int:
             release_text = release_file.read()
         finally:
             release_file.close()
-        match = re.search(r"release (\d)", release_text)
+        match = re.search(r"release (\d+)", release_text)
         return int(match.group(1))
     except (EnvironmentError, TypeError, ValueError) as e:
         _log.write("Couldn't determine redhat release: " + str(e) + "\n")
